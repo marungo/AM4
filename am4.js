@@ -1,6 +1,5 @@
 var url = "https://spreadsheets.google.com/feeds/list/1035SQBywbuvWHoVof3G-VI0rapYJslaeYN5tTpNZq2M/od6/public/values?";
-var cleanedCourses = {}// global variable
-var courseArray = [];
+var constraints = [["AFR", 0], ["Pashington Obeng", 8]];//temporary global variable to test constraint functions
 
 $.getJSON(url+"alt=json-in-script&callback=?",
     function (response){
@@ -9,10 +8,11 @@ $.getJSON(url+"alt=json-in-script&callback=?",
         processCourses(items);
         parseCoursesInfo(cleanedCourses);
         console.log(courseArray);
-        console.log(findCoursesBOConstraint("AFR", 0));
+        console.log(findCoursesBOAllConstraints(constraints));
       }
 });
 
+var cleanedCourses = {}// global variable
 function processCourses(allCourses){   
   // 1. create an object that will store each course by its CRN
   for (var i in allCourses){
@@ -31,6 +31,7 @@ function processCourses(allCourses){
   // other things
 }
 
+//make a course object as an array of course attribute elements
 function parseCoursesInfo(courses) {
 	for (var key in courses) {
 		courseArray.push(courses[key].Name.split(" "));//index 0 = subject, 1 = course level/num, 3 = section
@@ -43,10 +44,11 @@ function parseCoursesInfo(courses) {
 	}
 }
 
-//give the index of the constraint (based on its 
-//placement in a courseArray element)
-function findCoursesBOConstraint(constraint, index) {
-	var courses = courseArray;
+//give a set of courses, the constraint and the index 
+//of the constraint (based on its placement in a courseArray 
+//element), return an array of courses that meet that constraint
+var courseArray = []//global variable
+function findCoursesBOConstraint(courses, constraint, index) {
 	var results = [];
 	for (var i in courses) {
 		if (courses[i][index] == constraint) {
@@ -56,40 +58,17 @@ function findCoursesBOConstraint(constraint, index) {
 	return results;
 }
 
-
-// "200 level poli-sci courses that meet twice a week". You can 
-// choose to restrict the range to three fields of your choice and
-//  any combination of them, but you cannot ask users to enter
-//   structured text such as: "subject=polisci;level=200;days=M,Th". 
-//   Dealing with free-form text is difficult, but it's a good challenge 
-//   for students who consider themselves strong in data structures.
-function parseFeed(input) {
-	var inputItems = input.split(" ");
-	for (var i in inputItems) {
-		if (isInt(inputItems[i])) {//if it's an integer, they're asking course number or class level
-			if (inputItems[i].length == 3) {
-				console.log(inputItems[i] + ": this input query is a particular class level i.e. 212");
-				if (inputItems[i] == "100" || "200" || "300") {
-					console.log(inputItems[i] + ": this input query is indicating a general class level i.e. 200");
-				} else if (inputItems[i].indexOf(":")) {
-					console.log("blah blah");
-				}
-			} else if (inputItems[i].length == 5) {
-				console.log(inputItems[i] + ": this input query is a course number i.e. 24656");
-			}
-		}
-		// } else {
-		// 	console.log(inputItems[i] + ": this input query is not an integer");
-		// }
+//constraints is an array of all the constraints
+//each constraint element is a two-element array with
+//the query (taken from drop-down menu) and corresponding index
+function findCoursesBOAllConstraints(constraints) {
+	var courses = courseArray;
+	for (var i in constraints) {
+		courses = findCoursesBOConstraint(courses, 
+			constraints[i][0], constraints[i][1]);
 	}
+	return courses;
 }
-
-console.log(parseFeed("300, 24564, africana studies"));
-
-function isInt(value) {
-  return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value));
-}
-
 
 var button = document.querySelector("button");
 button.onclick = function () {
@@ -97,6 +76,33 @@ button.onclick = function () {
     input = input.value;
     //get info
 }
+
+// "200 level poli-sci courses that meet twice a week". You can 
+// choose to restrict the range to three fields of your choice and
+//  any combination of them
+// function parseFeed(input) {
+// 	var inputItems = input.split(" ");
+// 	for (var i in inputItems) {
+// 		if (isInt(inputItems[i])) {//if it's an integer, they're asking course number or class level
+// 			if (inputItems[i].length == 3) {
+// 				console.log(inputItems[i] + ": this input query is a particular class level i.e. 212");
+// 				if (inputItems[i] == "100" || "200" || "300") {
+// 					console.log(inputItems[i] + ": this input query is indicating a general class level i.e. 200");
+// 				} else if (inputItems[i].indexOf(":") > -1) {//if ":" exists in the input
+// 					console.log(inputItems[i] + " this input query is a time");
+// 				} else if (inputItems[i].length == 1) {
+// 					console.log(inputItems[i] + ": this input query indicates how many times a week they want the class to meet");
+// 				}
+// 			} else if (inputItems[i].length == 5) {
+// 				console.log(inputItems[i] + ": this input query is a course number i.e. 24656");
+// 			}
+// 		}
+// 	}
+// }
+
+// function isInt(value) {
+//   return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value));
+// }
 
 
 
