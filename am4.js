@@ -1,6 +1,5 @@
 var url = "https://spreadsheets.google.com/feeds/list/1035SQBywbuvWHoVof3G-VI0rapYJslaeYN5tTpNZq2M/od6/public/values?";
 var cleanedCourses = {}// global variable
-var allSubjects = [];
 var courseArray = [];
 
 $.getJSON(url+"alt=json-in-script&callback=?",
@@ -10,6 +9,7 @@ $.getJSON(url+"alt=json-in-script&callback=?",
         processCourses(items);
         parseCoursesInfo(cleanedCourses);
         console.log(courseArray);
+        console.log(findCoursesBOConstraint("AFR", 0));
       }
 });
 
@@ -57,19 +57,46 @@ function findCoursesBOConstraint(constraint, index) {
 }
 
 
+// "200 level poli-sci courses that meet twice a week". You can 
+// choose to restrict the range to three fields of your choice and
+//  any combination of them, but you cannot ask users to enter
+//   structured text such as: "subject=polisci;level=200;days=M,Th". 
+//   Dealing with free-form text is difficult, but it's a good challenge 
+//   for students who consider themselves strong in data structures.
+function parseFeed(input) {
+	var inputItems = input.split(" ");
+	for (var i in inputItems) {
+		if (isInt(inputItems[i])) {//if it's an integer, they're asking course number or class level
+			if (inputItems[i].length == 3) {
+				console.log(inputItems[i] + ": this input query is a particular class level i.e. 212");
+				if (inputItems[i] == "100" || "200" || "300") {
+					console.log(inputItems[i] + ": this input query is indicating a general class level i.e. 200");
+				} else if (inputItems[i].indexOf(":")) {
+					console.log("blah blah");
+				}
+			} else if (inputItems[i].length == 5) {
+				console.log(inputItems[i] + ": this input query is a course number i.e. 24656");
+			}
+		}
+		// } else {
+		// 	console.log(inputItems[i] + ": this input query is not an integer");
+		// }
+	}
+}
+
+console.log(parseFeed("300, 24564, africana studies"));
+
+function isInt(value) {
+  return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value));
+}
+
+
 var button = document.querySelector("button");
 button.onclick = function () {
     var input = document.querySelector("#guess");
     input = input.value;
     //get info
 }
-
-console.log(cleanedCourses);
-
-console.log(findCoursesBOConstraint("AFR", 0));
-
-
-
 
 
 
