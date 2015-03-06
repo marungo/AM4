@@ -77,32 +77,6 @@ button.onclick = function () {
     //get info
 }
 
-// "200 level poli-sci courses that meet twice a week". You can 
-// choose to restrict the range to three fields of your choice and
-//  any combination of them
-// function parseFeed(input) {
-// 	var inputItems = input.split(" ");
-// 	for (var i in inputItems) {
-// 		if (isInt(inputItems[i])) {//if it's an integer, they're asking course number or class level
-// 			if (inputItems[i].length == 3) {
-// 				console.log(inputItems[i] + ": this input query is a particular class level i.e. 212");
-// 				if (inputItems[i] == "100" || "200" || "300") {
-// 					console.log(inputItems[i] + ": this input query is indicating a general class level i.e. 200");
-// 				} else if (inputItems[i].indexOf(":") > -1) {//if ":" exists in the input
-// 					console.log(inputItems[i] + " this input query is a time");
-// 				} else if (inputItems[i].length == 1) {
-// 					console.log(inputItems[i] + ": this input query indicates how many times a week they want the class to meet");
-// 				}
-// 			} else if (inputItems[i].length == 5) {
-// 				console.log(inputItems[i] + ": this input query is a course number i.e. 24656");
-// 			}
-// 		}
-// 	}
-// }
-
-// function isInt(value) {
-//   return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value));
-// }
 
 
 
