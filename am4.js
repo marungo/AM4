@@ -99,6 +99,168 @@ button.onclick = function () {
 }
 
 
+$(document).ready(function () {
+  $('.about').click(function() {
+    $('.info').css('visibility', 'visible');
+    $('.about').css('visibility','hidden');
+  });
 
+  $('.info').click(function() {
+    $('.info').css('visibility', 'hidden');
+    $('.about').css('visibility','visible');
+  });
+
+  $(function() {
+
+  var subjects = [
+    
+ "Africana Studies", 
+  "American Studies",
+  "Anthropology",
+  "Arabic",
+  "Art History",
+  "Art-Studio",
+  "Astronomy",
+  "Biochemistry",
+  "Biological Science",
+  "Cinema and Media Studies",
+  "Chemistry",
+  "Chinese Language and Culture",
+  "Classical Civilization",
+  "Cognitive and Linguistic Sci",
+  "Comparative Literature",
+"Computer Science",
+  "East Asian Languages and Cultures",
+  "Economics",
+  "Education",
+ "English",
+  "Engineering",
+"Environmental Studies",
+  "Extradepartmental",
+  "French",
+  "Geosciences",
+ "German",
+ "Greek",
+  "Hebrew",
+  "History",
+  "Hindi/Urdu",
+  "Italian Studies",
+ "Japanese Lang and Culture",
+ "Korean Lang and Culture",
+ "Latin",
+  "Linguistics",
+  "Mathematics",
+  "Medieval/Renaissance",
+ "Middle Eastern Studies",
+ "Music",
+  "Neuroscience",
+"Physical Education",
+  "Peace and Justice Studies",
+  "Philosophy",
+  "Physics",
+ "Political Science (POL)",
+  "Political Science (POL1)",
+  "Political Science (POL2)",
+  "Political Science (POL3)",
+  "Political Science (POL4)",
+  "Portuguese",
+  "Psychology",
+"Quantitative Reasoning",
+  "Russian Area Studies",
+ "Religion",
+  "Russian",
+ "South Asia Studies",
+ "Sociology",
+  "Spanish",
+  "Sustainability",
+ "Swahili",
+  "Theatre Studies",
+  "Women's & Gender Studies",
+  "Writing",
+    ];
+
+    var abbr = [
+"AFR",
+"AMST",
+"ANTH",
+"ARAB",
+"ARTH",
+"ARTS",
+"ASTR",
+"BABS",
+"BIOC",
+"BISC",
+"CAMS",
+"CHEM",
+"CHIN",
+"CLCV",
+"CLSC",
+"CPLT",
+"CS",
+"EALC",
+"ECON",
+"EDUC",
+"ENG",
+"ENGR",
+"ES",
+"EXTD",
+"FREN",
+"GEOS",
+"GER",
+"GRK",
+"HEBR",
+"HIST",
+"HNUR",
+"ITAS",
+"JPN",
+"KOR",
+"LAT",
+"LING",
+"MATH",
+"ME/R",
+"MES",
+"MUS",
+"NEUR",
+"PE",
+"PEAC",
+"PHIL",
+"PHYS",
+"POL",
+"POL1",
+"POL2",
+"POL3",
+"POL4",
+"PORT",
+"PSYC",
+"QR",
+"RAST",
+"REL",
+"RUSS",
+"SAS",
+"SOC",
+"SPAN",
+"SUST",
+"SWA",
+"THST", 
+"WGST",  
+"WRIT",  
+    ]
+
+  $('#classes').autocomplete({
+    source: subjects
+  });
+});
+
+  $("#submitInfo").click(function() {
+        var info = $("#classes").val().split(" ");
+        if (info != null) {
+            $("#classes").val("");
+            console.log(info);
+        }
+  });
+});
+
+
+ 
 
 
