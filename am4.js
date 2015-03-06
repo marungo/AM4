@@ -246,21 +246,4 @@ $(document).ready(function () {
 "WRIT",  
     ]
 
-  $('#classes').autocomplete({
-    source: subjects
-  });
-});
-
-  $("#submitInfo").click(function() {
-        var info = $("#classes").val().split(" ");
-        if (info != null) {
-            $("#classes").val("");
-            console.log(info);
-        }
-  });
-});
-
-
- 
-
 
