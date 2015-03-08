@@ -1,23 +1,91 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <style type="text/css">
-      html, body { height: 100%; width: 100%;}
-    </style>
-    <link rel="stylesheet" type="text/css" href="am4.css">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5Bymq0Qwz0sdQWcW2mTbaUC-Ljrjg68o"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  </head>
-  <body>
-    <div id="score">
-      <h1></h1>
-    </div>
+<head>
+  <meta charset="utf-8">
 
-    <div id="searchInput">
-      <input type="text" id="guess" placeholder="Capital">
-      <button>Input</button>
-    </div>
+  <title> scheduler</title>
 
-    <script src="am4.js"></script>
-  </body>
+  <link rel="stylesheet" href="am4.css">
+    
+ <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+ <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+<script src="am4.js"> </script> 
+ <link rel="stylesheet" href="http://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+</head>
+
+<body>
+  <a class="c" tabindex="-1"> scheduler</a>
+
+  <div id = "rapper">
+
+      <div class = "about"> CLICK FOR information before proceeding </div>
+    <div class = "info">
+      Please enter in all the information you would like
+      to use as search parameters. Upon pressing submit,
+      our page will return a list of available classes
+      that you can add to your Google Calendar. 
+
+    </div>
+    <div id="wrap">
+      <div class="ui-widget">
+        <input id="classes" size=20 type="text" name = "info" 
+        placeholder="type a subject" autocomplete="on">
+      </div>
+
+
+      <select id = "menu"> 
+        <option value = "na"> Select distribution: </option>
+        <option value = "Arts, Music, Theatre, Film, Video "> Arts, Music, Theatre, Film, Video </option>
+        <option value = "Epistemology and Cognition"> Epistemology and Cognition</option>
+        <option value = "Historical Studies"> Historical Studies</option>
+        <option value = "Language and Literature"> Language and Literature </option>
+        <option value = "Natural and Physical Sciences"> Natural and Physical Sciences</option>
+        <option value = "QRB"> QRB</option>
+        <option value = "QRF"> QRF </option>
+        <option value = "Religion, Ethics and Moral Philosophy"> Religion, Ethics and Moral Philosophy</option>
+        <option value = "Social and Behavioral Analysis"> Social and Behavioral Analysis </option>
+      </select>
+
+      <div id="check">
+        Select day(s) of week: <br>
+          <input type="checkbox" class="days" id="M"><label for="M">Monday</label> <br>
+          <input type="checkbox" class="days" id="T"><label for="T">Tuesday</label><br>
+          <input type="checkbox" class="days" id="W"><label for="W">Wednesday</label><br>
+          <input type="checkbox" class="days" id="Th"><label for="Th">Thursday</label><br>
+          <input type="checkbox" class="days"  id="F"><label for="F">Friday</label>
+      </div>
+
+
+        <input type="submit" class = "submit" value="submit" id = "submitInfo">
+
+        <div id = "list">
+          <div id = "listTitle"> LIST OF CLASSES: </div>
+        </div>
+
+        <div id = "calendar">
+        </div>
+
+
+<!-- 
+      <div id="distribution">
+        Select distribution: <br>
+          <input type="checkbox" id="Arts"><label for="Arts">Arts, Music, Theatre, Film, Video</label> <br>
+          <input type="checkbox" id="Epistemology"><label for="Epistemology">Epistemology and Cognition</label><br>
+          <input type="checkbox" id="Historical"><label for="Historical">Historical Studies</label><br>
+          <input type="checkbox" id="Language"><label for="Language">Language and Literature</label><br>
+          <input type="checkbox" id="Natural"><label for="Natural">Natural and Physical Sciences</label>
+          <input type="checkbox" id="QRB"><label for="QRB"> QRB</label>
+          <input type="checkbox" id="QRF"><label for="QRF"> QRF</label>
+          <input type="checkbox" id="Religion"><label for="Religion"> Religion, Ethics, and Moral Philosophy</label>
+          <input type="checkbox" id="Social"><label for="Social"> Social and Behavioral Analysis</label>
+      </div>
+ -->
+      <!-- <input id="classes" type="text" name="info" placeholder="type a subject" autocomplete="on">
+      <input type="submit" class = "submit" value="submit" id = "submitInfo"> -->
+
+    </div>
+  </div>
+
+
+</body>
 </html>
