@@ -1,1 +1,179 @@
-am4.css
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body,
+input {
+  font: 300 18px/1.2 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+}
+
+html { 
+  /*background: url("trip.png") no-repeat center center fixed; */
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+button {
+  font: 20px 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  color: white;
+  border: none;
+  font-weight: 200;
+  background: #345;
+  padding: 5px;
+  margin: 5px;
+  float: center;
+  cursor: pointer;
+}
+
+#wrap {
+  width: 700px;
+  margin: 0px auto;
+}
+.about {
+  width: 300px;
+  text-align: center;
+  padding-left: 10px;
+  height: 200px;
+  margin: 0px auto;
+  margin-top: 100px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: black;
+  z-index: 100;
+  cursor: pointer;
+
+}
+
+#listTitle {
+  text-align: center;
+  margin-top: 5px;
+  font-size: 30px;
+}
+
+#list {
+  border: 2px solid black;
+  height: 400px;
+  width: 300px;
+  float: right;
+  margin-top: -400px;
+  margin-right: 30px;
+  overflow: scroll;
+}
+
+#calendar {
+  border: 2px solid black;
+  width: 600px;
+  height: 400px;
+  margin-top: 100px;
+  margin-left: 100px;
+  margin-bottom: 100px;
+}
+
+.info {
+  width: 400px;
+  text-align: center;
+  padding: 5px;
+  height: 80px;
+  margin: 0px auto;
+  margin-top: -200px;
+  margin-bottom: 50px;
+  font-size: 13px;
+  line-height: 1.2;
+  letter-spacing: 1px;
+  color: black;
+  z-index: 100;
+  border: 2px black solid;
+  visibility: hidden;
+  cursor: pointer;
+}
+
+#check {
+  font: 14px 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  margin-left: 100px;
+  margin-top: 2em;
+}
+
+#menu {
+  margin-left: 100px;
+  width: 200px;
+  margin-top: 2em;
+}
+
+#distribution {
+  font: 14px 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  margin-left: 100px;
+  margin-top: 2em;
+}
+
+#classes {
+  margin-top: 20px;
+  margin-bottom: 15px;
+  width: 200px;
+  font-size: 24px;
+  background:transparent;
+  border: none;
+  border-bottom: 1px dotted black;
+  border-radius: 0;
+  color: black;
+  font: 16px 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+}
+
+label {
+  font: 20px 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  font-weight: 100;
+}
+
+.ui-widget {
+  width: 200px;
+  margin-left: 100px;
+}
+
+#classes:focus {
+  border-bottom-color: black;
+  outline: none;
+}
+
+.submit {
+  color: black;
+  font-weight: 100;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: block;
+  margin-left: 140px;
+  margin-top: 1em;
+}
+
+#submit:focus{
+  outline:none;
+}
+
+#submitInfo {
+  font: 40px 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+}
+
+.c {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: black;
+}
+
+
