@@ -1,6 +1,66 @@
+//global variables!
 var url = "https://spreadsheets.google.com/feeds/list/1035SQBywbuvWHoVof3G-VI0rapYJslaeYN5tTpNZq2M/od6/public/values?";
-var cleanedCourses = {}// global variable
+var cleanedCourses = {};
 var courseArray = [];
+
+$(document).ready(function () {
+  $('.about').click(function() {
+    $('.info').css('visibility', 'visible');
+    $('.about').css('visibility','hidden');
+  });
+
+  $('.info').click(function() {
+    $('.info').css('visibility', 'hidden');
+    $('.about').css('visibility','visible');
+  });
+
+  $(function() {
+    var subjects = [
+      "Africana Studies", "American Studies","Anthropology","Arabic",
+      "Art History","Art-Studio","Astronomy","Biochemistry","Biological Science",
+      "Cinema and Media Studies","Chemistry","Chinese Language and Culture",
+      "Classical Civilization","Cognitive and Linguistic Sci",
+      "Comparative Literature","Computer Science","East Asian Languages and Cultures",
+      "Economics","Education","English","Engineering","Environmental Studies",
+      "Extradepartmental","French","Geosciences","German","Greek","Hebrew",
+      "History","Hindi/Urdu","Italian Studies","Japanese Lang and Culture",
+      "Korean Lang and Culture","Latin","Linguistics","Mathematics",
+      "Medieval/Renaissance","Middle Eastern Studies","Music","Neuroscience",
+      "Physical Education","Peace and Justice Studies","Philosophy","Physics",
+      "Political Science (POL)","Political Science (POL1)","Political Science (POL2)",
+      "Political Science (POL3)","Political Science (POL4)","Portuguese",
+      "Psychology","Quantitative Reasoning","Russian Area Studies","Religion",
+      "Russian","South Asia Studies","Sociology","Spanish","Sustainability",
+      "Swahili","Theatre Studies","Women's & Gender Studies","Writing", ];
+    var abbr = [
+      "AFR", "AMST", "ANTH","ARAB","ARTH","ARTS", "ASTR", "BABS", "BIOC", "BISC",
+      "CAMS","CHEM","CHIN","CLCV","CLSC","CPLT","CS","EALC","ECON","EDUC","ENG",
+      "ENGR","ES","EXTD","FREN","GEOS","GER","GRK","HEBR","HIST","HNUR",
+      "ITAS","JPN","KOR","LAT","LING","MATH","ME/R","MES","MUS","NEUR",
+      "PE","PEAC","PHIL","PHYS","POL","POL1","POL2","POL3","POL4",
+      "PORT","PSYC","QR","RAST","REL","RUSS","SAS","SOC","SPAN","SUST",
+      "SWA","THST", "WGST","WRIT",];
+    
+    $('#classes').autocomplete({
+      source: subjects
+    });
+  });
+
+  $('#check').buttonset();
+
+  $("#submitInfo").click(function() {
+        var subject = $("#classes").val();
+        var distribution = $('#menu').val();
+        var days = [];
+        $('#check input:checked').each(function() {
+          days.push($(this).attr('id'));
+        });   
+        console.log(subject);
+        console.log(distribution);
+        console.log(days);
+  });
+});
+
 
 $.getJSON(url+"alt=json-in-script&callback=?",
     function (response){
@@ -10,8 +70,19 @@ $.getJSON(url+"alt=json-in-script&callback=?",
         parseCoursesInfo(cleanedCourses);
         console.log(courseArray);
         console.log(findCoursesBOConstraint("AFR", 0));
-      }
-});
+      } 
+    });   
+
+function callbackFunction(response) {
+  items = response.feed.entry;
+  if (response.feed) {
+    processCourses(items);
+    parseCoursesInfo(cleanedCourses);
+
+    console.log(courseArray);
+    console.log(findCoursesBOConstraint("AFR", 0));
+  }
+}
 
 function processCourses(allCourses){   
   // 1. create an object that will store each course by its CRN
@@ -56,194 +127,12 @@ function findCoursesBOConstraint(constraint, index) {
 	return results;
 }
 
-
-// "200 level poli-sci courses that meet twice a week". You can 
-// choose to restrict the range to three fields of your choice and
-//  any combination of them, but you cannot ask users to enter
-//   structured text such as: "subject=polisci;level=200;days=M,Th". 
-//   Dealing with free-form text is difficult, but it's a good challenge 
-//   for students who consider themselves strong in data structures.
-function parseFeed(input) {
-	var inputItems = input.split(" ");
-	for (var i in inputItems) {
-		if (isInt(inputItems[i])) {//if it's an integer, they're asking course number or class level
-			if (inputItems[i].length == 3) {
-				console.log(inputItems[i] + ": this input query is a particular class level i.e. 212");
-				if (inputItems[i] == "100" || "200" || "300") {
-					console.log(inputItems[i] + ": this input query is indicating a general class level i.e. 200");
-				} else if (inputItems[i].indexOf(":")) {
-					console.log("blah blah");
-				}
-			} else if (inputItems[i].length == 5) {
-				console.log(inputItems[i] + ": this input query is a course number i.e. 24656");
-			}
-		}
-		// } else {
-		// 	console.log(inputItems[i] + ": this input query is not an integer");
-		// }
-	}
+function searchSubjectQuery(query) {
+  var index;
+  for (var i in subjects) {
+    if (query == subjects[i]) {
+      index = i;
+    }
+  }
+  return abbr[index];
 }
-
-console.log(parseFeed("300, 24564, africana studies"));
-
-function isInt(value) {
-  return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value));
-}
-
-
-var button = document.querySelector("button");
-button.onclick = function () {
-    var input = document.querySelector("#guess");
-    input = input.value;
-    //get info
-}
-
-
-$(document).ready(function () {
-  $('.about').click(function() {
-    $('.info').css('visibility', 'visible');
-    $('.about').css('visibility','hidden');
-  });
-
-  $('.info').click(function() {
-    $('.info').css('visibility', 'hidden');
-    $('.about').css('visibility','visible');
-  });
-
-  $(function() {
-
-  var subjects = [
-    
- "Africana Studies", 
-  "American Studies",
-  "Anthropology",
-  "Arabic",
-  "Art History",
-  "Art-Studio",
-  "Astronomy",
-  "Biochemistry",
-  "Biological Science",
-  "Cinema and Media Studies",
-  "Chemistry",
-  "Chinese Language and Culture",
-  "Classical Civilization",
-  "Cognitive and Linguistic Sci",
-  "Comparative Literature",
-"Computer Science",
-  "East Asian Languages and Cultures",
-  "Economics",
-  "Education",
- "English",
-  "Engineering",
-"Environmental Studies",
-  "Extradepartmental",
-  "French",
-  "Geosciences",
- "German",
- "Greek",
-  "Hebrew",
-  "History",
-  "Hindi/Urdu",
-  "Italian Studies",
- "Japanese Lang and Culture",
- "Korean Lang and Culture",
- "Latin",
-  "Linguistics",
-  "Mathematics",
-  "Medieval/Renaissance",
- "Middle Eastern Studies",
- "Music",
-  "Neuroscience",
-"Physical Education",
-  "Peace and Justice Studies",
-  "Philosophy",
-  "Physics",
- "Political Science (POL)",
-  "Political Science (POL1)",
-  "Political Science (POL2)",
-  "Political Science (POL3)",
-  "Political Science (POL4)",
-  "Portuguese",
-  "Psychology",
-"Quantitative Reasoning",
-  "Russian Area Studies",
- "Religion",
-  "Russian",
- "South Asia Studies",
- "Sociology",
-  "Spanish",
-  "Sustainability",
- "Swahili",
-  "Theatre Studies",
-  "Women's & Gender Studies",
-  "Writing",
-    ];
-
-    var abbr = [
-"AFR",
-"AMST",
-"ANTH",
-"ARAB",
-"ARTH",
-"ARTS",
-"ASTR",
-"BABS",
-"BIOC",
-"BISC",
-"CAMS",
-"CHEM",
-"CHIN",
-"CLCV",
-"CLSC",
-"CPLT",
-"CS",
-"EALC",
-"ECON",
-"EDUC",
-"ENG",
-"ENGR",
-"ES",
-"EXTD",
-"FREN",
-"GEOS",
-"GER",
-"GRK",
-"HEBR",
-"HIST",
-"HNUR",
-"ITAS",
-"JPN",
-"KOR",
-"LAT",
-"LING",
-"MATH",
-"ME/R",
-"MES",
-"MUS",
-"NEUR",
-"PE",
-"PEAC",
-"PHIL",
-"PHYS",
-"POL",
-"POL1",
-"POL2",
-"POL3",
-"POL4",
-"PORT",
-"PSYC",
-"QR",
-"RAST",
-"REL",
-"RUSS",
-"SAS",
-"SOC",
-"SPAN",
-"SUST",
-"SWA",
-"THST", 
-"WGST",  
-"WRIT",  
-    ]
-
-
