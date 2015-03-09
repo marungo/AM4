@@ -261,10 +261,11 @@ function searchSubjectQuery(query) {
 function toStringDayAndTime(course) {
   var string = "Meets on: ";
   for (var i in course[5]) {
-    string += course[5][i] + " at " + course[6][i];
+    string += course[5][i].replace(/R/, "Th") + " at " + course[6][i];
     if (i + 1 != course[7].length) {
       string += " and ";
     }
+    console.log(string);
   }
   return string;
 }  
