@@ -1,3 +1,19 @@
+/* Filename: am4.js
+Author: Mary Ruth Ngo
+Date: March 10, 2015
+
+Goal: Javascript code for implementing a wep app that takes Wellesley's Course Info and makes
+it searchable by distribution, subject and days in the week. The information of courses that
+meet the given criteria will be displayed in a div, and ultimately be used to populate
+a Google Calendar (that functionality is in the other js file).
+
+Honor Code Statement:
+On this task I collaborated with Lucy Cheng and Jessica Bu. Lucy focused on the CSS and HTML
+while Jessica and I focused on back-end Javascript stuff. I worked with the course feed and Jessica
+worked on exporting a class schedule onto the Google Calendar. We had a lot of fun!
+
+*/
+
 //global variables!
 var url = "https://spreadsheets.google.com/feeds/list/1035SQBywbuvWHoVof3G-VI0rapYJslaeYN5tTpNZq2M/od6/public/values?";
 var cleanedCourses = [];
@@ -18,16 +34,16 @@ $(document).ready(function () {
   $(function() {
     subjects = [
       "Africana Studies", "American Studies","Anthropology","Arabic",
-      "Art History","Art-Studio","Astronomy","Biochemistry","Biological Science",
+      "Art History","Art-Studio","Astronomy", "Babson", "Biochemistry","Biological Science",
       "Cinema and Media Studies","Chemistry","Chinese Language and Culture",
       "Classical Civilization","Cognitive and Linguistic Sci",
       "Comparative Literature","Computer Science","East Asian Languages and Cultures",
-      "Economics","Education","English","Engineering","Environmental Studies",
+      "Economics","Education","English", "Engineering", "Environmental Studies",
       "Extradepartmental","French","Geosciences","German","Greek","Hebrew",
       "History","Hindi/Urdu","Italian Studies","Japanese Lang and Culture",
       "Korean Lang and Culture","Latin","Linguistics","Mathematics",
-      "Medieval/Renaissance","Middle Eastern Studies","Music","Neuroscience",
-      "Physical Education","Peace and Justice Studies","Philosophy","Physics",
+      "Medieval/Renaissance","Middle Eastern Studies", "Music",
+      "Neuroscience", "Physical Education","Peace and Justice Studies","Philosophy","Physics",
       "Political Science (POL)","Political Science (POL1)","Political Science (POL2)",
       "Political Science (POL3)","Political Science (POL4)","Portuguese",
       "Psychology","Quantitative Reasoning","Russian Area Studies","Religion",
@@ -35,11 +51,11 @@ $(document).ready(function () {
       "Swahili","Theatre Studies","Women's & Gender Studies","Writing", ];
     abbr = [
       "AFR", "AMST", "ANTH","ARAB","ARTH","ARTS", "ASTR", "BABS", "BIOC", "BISC",
-      "CAMS","CHEM","CHIN","CLCV","CLSC","CPLT","CS","EALC","ECON","EDUC","ENG",
-      "ENGR","ES","EXTD","FREN","GEOS","GER","GRK","HEBR","HIST","HNUR",
+      "CAMS","CHEM","CHIN","CLCV","CLSC","CPLT","CS","EALC","ECON","EDUC","ENG", "ENGR",
+      "ES","EXTD","FREN","GEOS","GER","GRK","HEBR","HIST","HNUR",
       "ITAS","JPN","KOR","LAT","LING","MATH","ME/R","MES","MUS","NEUR",
       "PE","PEAC","PHIL","PHYS","POL","POL1","POL2","POL3","POL4",
-      "PORT","PSYC","QR","RAST","REL","RUSS","SAS","SOC","SPAN","SUST",
+      "PORT","PSYC","QR","RAST","REL", "RUSS", "SAS","SOC","SPAN","SUST",
       "SWA","THST", "WGST","WRIT",];
     
     $('#classes').autocomplete({
@@ -49,28 +65,27 @@ $(document).ready(function () {
 
   $('#check').buttonset();
 
+  //this button takes all of the input from the 3 constraints and
+  //searches from 774 courses to find all the courses that meet the specific constraints
   $("#submitInfo").click(function() {
         var subject = $("#classes").val();
         var distribution = $('#menu').val();
         var days = [];
         $('#check input:checked').each(function() {
           days.push($(this).attr('id'));
-        });   
-        console.log(subject);
-        console.log(distribution);
-        console.log(days);
-        console.log(courseArray);
+        });
         var courses = findCoursesALLConstraints(courseArray, subject, distribution, days);
-        console.log(courses);
   });
 });
 
+//important function that makes an .ajax request that pulls data from a Google Spreadsheet
+//which was populated from the courses website for Wellesley College
 $.getJSON(url+"alt=json-in-script&callback=?",
     function (response){
       items = response.feed.entry;
       if (response.feed) {
         processCourses(items);
-        parseCoursesInfo(cleanedCourses);
+        parseCoursesInfo(cleanedCourses);//This function just makes it easier to 
       } 
     });
 
@@ -121,10 +136,13 @@ function findCoursesSub(courses, subject) {
 
 function findCoursesDays(courses, daysArray) {
   var results = [];
-  var days = daysArray.join().replace(/,/g, "");
-  days = days.split("");
   for (var i in courses) {
-    if (JSON.stringify(courses[i][5]) == JSON.stringify(days)) {//if array of days is equal to the days selected
+    
+    var days = courses[i][5].join().replace(/,/g, "");
+    days = days.split("");
+    // console.log(JSON.stringify(days) + " : " + JSON.stringify(daysArray));
+    
+    if (JSON.stringify(days) == JSON.stringify(daysArray)) {//if array of days is equal to the days selected
       results.push(courses[i]);
     }
   }
@@ -162,36 +180,33 @@ function findCoursesALLConstraints(courses, subject, distribution, days) {
 
   if (subject) {
     courses = findCoursesSub(courses, searchSubjectQuery(subject));
-  } else {
-    console.log("No Subjects");
   }
-
   if (distribution != "na") {
     courses = findCoursesDistrib(courses, distribution);
-  } else {
-    console.log("No Distribution");
   }
-
   if (days.length > 0) {
     courses = findCoursesDays(courses, days);
-  } else {
-    console.log("No Days");
   }
 
+  list.innerHTML = "";
   for (var i in courses) {
     
     var obj = document.createElement("div");
     obj.className = "listElements";
 
-    var title = document.createElement("h1");
+    var courseName = document.createElement("h4");
+    courseName.innerHTML = courses[i][4];
+
+    var title = document.createElement("h5");
     title.innerHTML = courses[i][0] + " " + courses[i][1] + " by " + courses[i][8];
     
-    var distribution = document.createElement("h2");
+    var distribution = document.createElement("h6");
     distribution.innerHTML = courses[i][5];
     
     var times = document.createElement("p");
-    times.innerHTML = courses[i][6];
+    times.innerHTML = toStringDayAndTime(courses[i]);
 
+    obj.appendChild(courseName)
     obj.appendChild(title);
     obj.appendChild(distribution);
     obj.appendChild(times);
@@ -211,27 +226,10 @@ function searchSubjectQuery(query) {
   return abbr[index];
 }
 
-//helper function to compare two arrays: used for comparing arrays of days
-// Array.prototype.equals = function (array) {
-//     // if the other array is a falsy value, return
-//     if (!array)
-//         return false;
-
-//     // compare lengths - can save a lot of time 
-//     if (this.length != array.length)
-//         return false;
-
-//     for (var i = 0, l=this.length; i < l; i++) {
-//         // Check if we have nested arrays
-//         if (this[i] instanceof Array && array[i] instanceof Array) {
-//             // recurse into the nested arrays
-//             if (!this[i].equals(array[i]))
-//                 return false;       
-//         }           
-//         else if (this[i] != array[i]) { 
-//             // Warning - two different object instances will never be equal: {x:20} != {x:20}
-//             return false;   
-//         }           
-//     }       
-//     return true;
-// }
+function toStringDayAndTime(course) {
+  var string = "Meets on: ";
+  for (var i in course[5]) {
+    string += course[5][i] + " at " + course[6][i];
+  }
+  return string;
+}  
