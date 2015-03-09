@@ -107,6 +107,8 @@ function processCourses(allCourses){
   // other things
 }
 
+//go through the cleanedCourse array and make an array of courses that I could visualize
+//a little better than the objects built in processCourses function.
 function parseCoursesInfo(courses) {
 	for (var key in courses) {
 		courseArray.push(courses[key].Name.split(" "));//index 0 = subject, 1 = course level/num, 3 = section
@@ -122,8 +124,7 @@ function parseCoursesInfo(courses) {
 	}
 }
 
-//give the index of the constraint (based on its 
-//placement in a courseArray element)
+//returns the courses of the given subject. The easiest search function! No cases!
 function findCoursesSub(courses, subject) {
 	var results = [];
 	for (var i in courses) {
@@ -134,14 +135,20 @@ function findCoursesSub(courses, subject) {
 	return results;
 }
 
+//returns courses that fit the exact combination of days that user selects
 function findCoursesDays(courses, daysArray) {
   var results = [];
   for (var i in courses) {
     
+    //to nullify the partitioned days, join everything, take away the commas, and resplit
     var days = courses[i][5].join().replace(/,/g, "");
     days = days.split("");
+
     // console.log(JSON.stringify(days) + " : " + JSON.stringify(daysArray));
     
+    //stringify the arrays so that they can be compared to. If you just compare
+    //arrays, they are not pointing to the same object, so even if they look the same,
+    //they will return as false.
     if (JSON.stringify(days) == JSON.stringify(daysArray)) {//if array of days is equal to the days selected
       results.push(courses[i]);
     }
@@ -149,7 +156,7 @@ function findCoursesDays(courses, daysArray) {
   return results;
 }
 
-//find courses based
+//returns courses that fulfill the distribution that the user selects
 function findCoursesDistrib(courses, distribution) {
   var results = [];
   for (var i in courses) {
@@ -168,7 +175,7 @@ function findCoursesDistrib(courses, distribution) {
       for (var j in distribs) {//in case there are 2 distributions split by "or"
         if (distribs[j] == distribution) {
           results.push(courses[i]);
-          break;
+          break;//as long as one of the distributions matches the given, no need to go on
         }
       }
     }
@@ -178,17 +185,23 @@ function findCoursesDistrib(courses, distribution) {
 
 function findCoursesALLConstraints(courses, subject, distribution, days) {
 
+  //call all three subjects, filtering the same set of courses so that at the end,
+  //the courses left fulfill all of the constraints.
   if (subject) {
     courses = findCoursesSub(courses, searchSubjectQuery(subject));
   }
-  if (distribution != "na") {
+  if (distribution != "na") {//placeholder for no distribution
     courses = findCoursesDistrib(courses, distribution);
   }
   if (days.length > 0) {
     courses = findCoursesDays(courses, days);
   }
 
+  //empty any courses that filled the list div from past inquiries
   list.innerHTML = "";
+
+  //fill (or refill) the list div of course divs showing name, title, 
+  //instructor, days and times, and distributions.
   for (var i in courses) {
     
     var obj = document.createElement("div");
@@ -216,6 +229,7 @@ function findCoursesALLConstraints(courses, subject, distribution, days) {
   return courses;
 }
 
+//returns the abbreviation of the given course subjectt
 function searchSubjectQuery(query) {
   var index;
   for (var i in subjects) {
@@ -226,6 +240,7 @@ function searchSubjectQuery(query) {
   return abbr[index];
 }
 
+//stringifies the days and times of a course for the div
 function toStringDayAndTime(course) {
   var string = "Meets on: ";
   for (var i in course[5]) {
