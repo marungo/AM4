@@ -67,14 +67,21 @@ $(document).ready(function () {
 
   //this button takes all of the input from the 3 constraints and
   //searches from 774 courses to find all the courses that meet the specific constraints
+
   $("#submitInfo").click(function() {
-        var subject = $("#classes").val();
-        var distribution = $('#menu').val();
-        var days = [];
-        $('#check input:checked').each(function() {
-          days.push($(this).attr('id'));
-        });
-        var courses = findCoursesALLConstraints(courseArray, subject, distribution, days);
+    //making sure subjects align with their abbreviation
+    // for (var i in subjects) {
+    //   console.log(subjects[i] + " : " + abbr[i]);
+    // }
+    var subject = $("#classes").val();
+    var distribution = $('#menu').val();
+    var days = [];
+
+    $('#check input:checked').each(function() {
+      days.push($(this).attr('id'));
+    });
+
+    var courses = findCoursesALLConstraints(courseArray, subject, distribution, days);
   });
 });
 
@@ -159,9 +166,7 @@ function findCoursesDays(courses, daysArray) {
 //returns courses that fulfill the distribution that the user selects
 function findCoursesDistrib(courses, distribution) {
   var results = [];
-  for (var i in courses) {
-    // console.log(courses[i][7]);
-    if (courses[i][7].length > 1) {//if multiple distributions
+  for (var i in courses) {    if (courses[i][7].length > 1) {//if multiple distributions
       for (j = 0; j<courses[i][7].length;) {
         if (courses[i][7][j] == distribution) {        
           results.push(courses[i]);
@@ -202,31 +207,43 @@ function findCoursesALLConstraints(courses, subject, distribution, days) {
 
   //fill (or refill) the list div of course divs showing name, title, 
   //instructor, days and times, and distributions.
-  for (var i in courses) {
-    
+
+  if (courses.length == 0) {
     var obj = document.createElement("div");
     obj.className = "listElements";
 
-    var courseName = document.createElement("h4");
-    courseName.innerHTML = courses[i][4];
+    var alert = document.createElement("h3");
+    alert.innerHTML = "No courses meet this set of criteria";
 
-    var title = document.createElement("h5");
-    title.innerHTML = courses[i][0] + " " + courses[i][1] + " by " + courses[i][8];
-    
-    var distribution = document.createElement("h6");
-    distribution.innerHTML = courses[i][5];
-    
-    var times = document.createElement("p");
-    times.innerHTML = toStringDayAndTime(courses[i]);
-
-    obj.appendChild(courseName)
-    obj.appendChild(title);
-    obj.appendChild(distribution);
-    obj.appendChild(times);
+    obj.appendChild(alert);
     list.appendChild(obj);
-  }
+  } else {
+    
+    for (var i in courses) {
+      var obj = document.createElement("div");
+      obj.className = "listElements";
 
-  return courses;
+      var courseName = document.createElement("h4");
+      courseName.innerHTML = courses[i][4];
+
+      var title = document.createElement("h5");
+      title.innerHTML = courses[i][0] + " " + courses[i][1] + " by " + courses[i][8];
+      
+      var distrib = document.createElement("h6");
+      var distribString = toStringDistribs(courses[i]);
+      console.log(distribString);
+      distrib.innerHTML = distribString;
+      
+      var times = document.createElement("p");
+      times.innerHTML = toStringDayAndTime(courses[i]);
+
+      obj.appendChild(courseName)
+      obj.appendChild(title);
+      obj.appendChild(distrib);
+      obj.appendChild(times);
+      list.appendChild(obj);
+    }
+  }
 }
 
 //returns the abbreviation of the given course subjectt
@@ -245,6 +262,21 @@ function toStringDayAndTime(course) {
   var string = "Meets on: ";
   for (var i in course[5]) {
     string += course[5][i] + " at " + course[6][i];
+    if (i + 1 != course[7].length) {
+      string += " and ";
+    }
   }
   return string;
 }  
+
+function toStringDistribs(course) {
+  var string = "Fulfills ";
+  for (var i = 0; i < course[7].length; i++) {
+    string += course[7][i];
+    if (i + 1 != course[7].length) {
+      string += " or ";
+    }
+    i += 1;
+  }
+  return string;
+}
