@@ -9,6 +9,24 @@
   box-sizing: border-box;
 }
 
+.listElements {
+  padding: 5px;
+  font: 100 12px 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+  text-align: center;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+h1{
+  text-align: center;
+  padding: 5px;
+  color: #823;
+}
+h2 {
+  text-align: center;
+  padding-bottom: 5px;
+}
+
 body,
 input {
   font: 300 18px/1.2 'Gotham SSm A', 'Gotham SSm B', sans-serif;
@@ -22,14 +40,23 @@ html {
   background-size: cover;
 }
 
+#interest {
+margin: 0px auto;
+width: 800px;
+font: 40px 'Gotham SSm A', 'Gotham SSm B', sans-serif;
+margin-top: 60px;
+margin-bottom: -100px;
+margin-left: 100px;
+}
+
 button {
   font: 20px 'Gotham SSm A', 'Gotham SSm B', sans-serif;
-  color: white;
+  color: black;
   border: none;
+  background: transparent;
   font-weight: 200;
-  background: #345;
-  padding: 5px;
-  margin: 5px;
+  padding: 10px;
+  margin: 10px;
   float: center;
   cursor: pointer;
 }
@@ -62,7 +89,7 @@ button {
   font-size: 30px;
 }
 
-#list {
+#listWrap {
   border: 2px solid black;
   height: 400px;
   width: 300px;
@@ -79,6 +106,7 @@ button {
   margin-top: 100px;
   margin-left: 100px;
   margin-bottom: 100px;
+  overflow: scroll;
 }
 
 .info {
