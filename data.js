@@ -16,9 +16,16 @@ worked on exporting a class schedule onto the Google Calendar. We had a lot of f
 
 //global variables!
 var url = "https://spreadsheets.google.com/feeds/list/1035SQBywbuvWHoVof3G-VI0rapYJslaeYN5tTpNZq2M/od6/public/values?";
-var cleanedCourses = [];
-var courseArray = [];
+var cleanedCourses = [];//set of course objects that Eni supplied the construction of
+var courseArray = [];//the array of courses that I built based on her course objects
+
+//this global variable allows Jessica to iterate
+//through all courses that user has put in shopping cart
+//and export them into her Google Calendar
 var selectedCourses = [];
+
+//global variables to hold subjects and their abbreviations (in a separate
+//array but at the same index as its respective subject)
 var subjects = [
   "Africana Studies", "American Studies","Anthropology","Arabic",
   "Art History","Art-Studio","Astronomy", "Babson", "Biochemistry","Biological Science",
@@ -56,6 +63,7 @@ $.getJSON(url+"alt=json-in-script&callback=?",
       } 
     });
 
+//function given to us by Eni
 function processCourses(allCourses){
   // 1. create an object that will store each course by its CRN
   for (var i in allCourses){
@@ -91,6 +99,8 @@ function parseCoursesInfo(courses) {
   }
 }
 
+//search helper function that returns true if a course's subject
+//is 
 function checkSubject(course, subject) {
   if (course[0] == subject) {
     return true;
@@ -98,6 +108,13 @@ function checkSubject(course, subject) {
   return false;
 }
 
+//returns true only if course meeting times include all of the days
+//that user selects. Must account for possibility of several days:
+//if user selected multiple days, algorithm assumes user means
+//that an "AND" argument rather than "OR." i.e. if user selects
+//M and Th, then all classes that meet MTh, or MWTh, or MTWThF
+//will be returned, but no seminars that meet just once on Monday
+//or Thursday will not be returned. 
 function checkDays(course, userDays) {    
   var days = course[5].join().split("");
   var userDays5 = make5DayArray(userDays);
@@ -112,11 +129,6 @@ function checkDays(course, userDays) {
         return true;
       }
     }
-    //if user selected multiple days, algorithm assumes user means
-    //that an "AND" argument rather than "OR." i.e. if user selects
-    //M and Th, then all classes that meet MTh, or MWTh, or MTWThF
-    //will be returned, but no seminars that meet just once on Monday
-    //or Thursday will not be returned. 
   } else if (userDays.length > 1) {//if user selected multiple days
     var numDays = 0;
     for (var i in userDays5) {
@@ -124,15 +136,18 @@ function checkDays(course, userDays) {
         numDays ++;
       }
     }
-    if (numDays == userDays.length){//if the number of day
-      console.log(userDays5, courseDays5);
+    if (numDays == userDays.length){//if the number of days found in the courses's day array
+                                    //is equal to the number of days that the user selected,
+                                    //then all of the user's selected days were found in the course.
       return true;
     }
   }
   return false;
 }
 
-//returns courses that fulfill the distribution that the user selects
+//returns true only if course fulfills the distribution that the user selects.
+//function must be ready for any case: 1 distrib, multiple distribs, distribs
+//that are on an "either or" basis
 function checkDistribs(course, distribution) {
   if (course[7].length > 1) {//if multiple distributions
     for (j = 0; j<course[7].length;) {
@@ -156,7 +171,7 @@ function checkDistribs(course, distribution) {
 
 //this function iterates through the 774 courses exactly once and checks
 //each course against the given criteria. Function works even if not all of
-//the constraints are activated.
+//the constraints are "activated".
 function checkAllConstraints(subject, distribution, days) {
   var results = [];
   for (var i in courseArray) {
@@ -189,7 +204,7 @@ function divifyCourses(subject, distribution, days) {
 
   //fill (or refill) the list div of course divs showing name, title, 
   //instructor, days and times, and distributions.
-  if (courses.length == 0) {// if there are no courses, then 
+  if (courses.length == 0) {// if there are no courses 
     var obj = document.createElement("div");
     obj.className = "listElements";
 
@@ -199,13 +214,20 @@ function divifyCourses(subject, distribution, days) {
     obj.appendChild(alert);
     list.appendChild(obj);
   } else {
-    for (var i in courses) {
+
+    for (var i in courses) {//iterate through courses
       var obj = document.createElement("button");
       obj.className = "listElements";
       obj.id = courses[i][2]; // id name is the CRN
 
+      //title div object shows the actual name of the course
+      //i.e. Black Women Writers
       var title = document.createElement("h1");
       title.innerHTML = courses[i][0] + " " + courses[i][1];
+
+      //name div object shows the subject abbreviation and course
+      //number as well as instructor
+      //i.e. AFR 212 with Selwyn Cudjoe
       var name = document.createElement("h2");
       name.innerHTML = courses[i][4] + " with " + courses[i][8]; 
       
@@ -224,6 +246,7 @@ function divifyCourses(subject, distribution, days) {
   }
 }
 
+//helper function finds and returns a course based on the CRN
 function findCoursesByCRN(crn) {
   for (var i in courseArray) {
     if (courseArray[i][2] == crn) {
@@ -232,7 +255,7 @@ function findCoursesByCRN(crn) {
   }
 }
 
-//returns the abbreviation of the given course subjectt
+//helper function returns the abbreviation of the given course subject
 function searchSubjectQuery(sub) {
   var index;
   for (var i in subjects) {
@@ -243,7 +266,7 @@ function searchSubjectQuery(sub) {
   return abbr[index];
 }
 
-//stringifies the days and times of a course for the div
+//helper function stringifies the days and times of a course for the div
 function toStringDayAndTime(course) {
   var string = "Meets on: ";
   for (var i in course[5]) {
@@ -252,18 +275,26 @@ function toStringDayAndTime(course) {
   return string;
 }  
 
+//helper function stringifies the distributions of a course for the div
 function toStringDistribs(course) {
   var string = "Fulfills: ";
   for (var i = 0; i < course[7].length; i++) {
     string += course[7][i];
     if (i + 1 != course[7].length) {
-      string += " or ";
+      string += " or ";//you can only use one course for one distribution
     }
-    i += 1;
+    i += 1;//increment up by 2 every time bc every other element in distrib
+    //array is fluff
   }
   return string;
 }
 
+//this helper function expands an array of days into a 5-element array,
+//slotting in a day according to its place in the week. Any spots 
+//for days that aren't present in the array will have a placeholder
+//of "0" to maintain the length. This function allows me to not
+//have to run through a nested for loop with my days filter function.
+//i.e. a daysArray = [M,T,R] will return as [M,T,0,R,0]
 function make5DayArray(daysArray) {
   var days = daysArray.join();
   days = days.split("");
