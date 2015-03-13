@@ -19,91 +19,31 @@ var url = "https://spreadsheets.google.com/feeds/list/1035SQBywbuvWHoVof3G-VI0ra
 var cleanedCourses = [];
 var courseArray = [];
 var selectedCourses = [];
-var subjects, abbr;
-
-$(document).ready(function () {
-  $('.about').click(function() {
-    $('.info').css('visibility', 'visible');
-    $('.about').css('visibility','hidden');
-  });
-
-  $('.info').click(function() {
-    $('.info').css('visibility', 'hidden');
-    $('.about').css('visibility','visible');
-  });
-
-  $(function() {
-    subjects = [
-      "Africana Studies", "American Studies","Anthropology","Arabic",
-      "Art History","Art-Studio","Astronomy", "Babson", "Biochemistry","Biological Science",
-      "Cinema and Media Studies","Chemistry","Chinese Language and Culture",
-      "Classical Civilization","Cognitive and Linguistic Sci",
-      "Comparative Literature","Computer Science","East Asian Languages and Cultures",
-      "Economics","Education","English", "Engineering", "Environmental Studies",
-      "Extradepartmental","French","Geosciences","German","Greek","Hebrew",
-      "History","Hindi/Urdu","Italian Studies","Japanese Lang and Culture",
-      "Korean Lang and Culture","Latin","Linguistics","Mathematics",
-      "Medieval/Renaissance","Middle Eastern Studies", "Music",
-      "Neuroscience", "Physical Education","Peace and Justice Studies","Philosophy","Physics",
-      "Political Science (POL)","Political Science (POL1)","Political Science (POL2)",
-      "Political Science (POL3)","Political Science (POL4)","Portuguese",
-      "Psychology","Quantitative Reasoning","Russian Area Studies","Religion",
-      "Russian","South Asia Studies","Sociology","Spanish","Sustainability",
-      "Swahili","Theatre Studies","Women's & Gender Studies","Writing", ];
-    abbr = [
-      "AFR", "AMST", "ANTH","ARAB","ARTH","ARTS", "ASTR", "BABS", "BIOC", "BISC",
-      "CAMS","CHEM","CHIN","CLCV","CLSC","CPLT","CS","EALC","ECON","EDUC","ENG", "ENGR",
-      "ES","EXTD","FREN","GEOS","GER","GRK","HEBR","HIST","HNUR",
-      "ITAS","JPN","KOR","LAT","LING","MATH","ME/R","MES","MUS","NEUR",
-      "PE","PEAC","PHIL","PHYS","POL","POL1","POL2","POL3","POL4",
-      "PORT","PSYC","QR","RAST","REL", "RUSS", "SAS","SOC","SPAN","SUST",
-      "SWA","THST", "WGST","WRIT",];
-    
-    $('#classes').autocomplete({
-      source: subjects
-    });
-  });
-
-  $('#check').buttonset();
-
-  //this button takes all of the input from the 3 constraints and
-  //searches from 774 courses to find all the courses that meet the specific constraints
-
-  $("#submitInfo").click(function() {
-    //making sure subjects align with their abbreviation
-    // for (var i in subjects) {
-    //   console.log(subjects[i] + " : " + abbr[i]);
-    // }
-    var subject = $("#classes").val();
-    var distribution = $('#menu').val();
-    var days = [];
-
-    $('#check input:checked').each(function() {
-      days.push($(this).attr('id'));
-    });
-
-    var courses = findCoursesALLConstraints(subject, distribution, days);
-  });
-});
-
-$(document).on("click", 'button', function() {
-  console.log(this);
-  var index = selectedCourses.indexOf(findCoursesByCRN(this.id));
-  if (index == -1) {
-    selectedCourses.push(findCoursesByCRN(this.id));
-    console.log(selectedCourses);
-    var added = $(this).clone().appendTo('#calendar');
-    $(added).css("width", "170px");
-    $(added).css("border", "1px auto black");
-  }
-});
-
-$(document).on("click", '#calendar button', function() {
-  $(this).remove();
-  var index = selectedCourses.indexOf(findCoursesByCRN(this.id));
-  selectedCourses.splice(index, 1);
-  console.log(selectedCourses + "after removal");
-});
+var subjects = [
+  "Africana Studies", "American Studies","Anthropology","Arabic",
+  "Art History","Art-Studio","Astronomy", "Babson", "Biochemistry","Biological Science",
+  "Cinema and Media Studies","Chemistry","Chinese Language and Culture",
+  "Classical Civilization","Cognitive and Linguistic Sci",
+  "Comparative Literature","Computer Science","East Asian Languages and Cultures",
+  "Economics","Education","English", "Engineering", "Environmental Studies",
+  "Extradepartmental","French","Geosciences","German","Greek","Hebrew",
+  "History","Hindi/Urdu","Italian Studies","Japanese Lang and Culture",
+  "Korean Lang and Culture","Latin","Linguistics","Mathematics",
+  "Medieval/Renaissance","Middle Eastern Studies", "Music",
+  "Neuroscience", "Physical Education","Peace and Justice Studies","Philosophy","Physics",
+  "Political Science (POL)","Political Science (POL1)","Political Science (POL2)",
+  "Political Science (POL3)","Political Science (POL4)","Portuguese",
+  "Psychology","Quantitative Reasoning","Russian Area Studies","Religion",
+  "Russian","South Asia Studies","Sociology","Spanish","Sustainability",
+  "Swahili","Theatre Studies","Women's & Gender Studies","Writing", ];
+var abbr = [
+  "AFR", "AMST", "ANTH","ARAB","ARTH","ARTS", "ASTR", "BABS", "BIOC", "BISC",
+  "CAMS","CHEM","CHIN","CLCV","CLSC","CPLT","CS","EALC","ECON","EDUC","ENG", "ENGR",
+  "ES","EXTD","FREN","GEOS","GER","GRK","HEBR","HIST","HNUR",
+  "ITAS","JPN","KOR","LAT","LING","MATH","ME/R","MES","MUS","NEUR",
+  "PE","PEAC","PHIL","PHYS","POL","POL1","POL2","POL3","POL4",
+  "PORT","PSYC","QR","RAST","REL", "RUSS", "SAS","SOC","SPAN","SUST",
+  "SWA","THST", "WGST","WRIT",];
 
 //important function that makes an .ajax request that pulls data from a Google Spreadsheet
 //which was populated from the courses website for Wellesley College
@@ -152,27 +92,43 @@ function parseCoursesInfo(courses) {
 }
 
 function checkSubject(course, subject) {
-  console.log(course[0] + " : " + subject);
   if (course[0] == subject) {
-    console.log("YAY! ^");
     return true;
   }
   return false;
 }
 
-function checkDays(course, daysArray) {    
-  //to nullify the partitioned days, join everything, take away the commas, and resplit
-  var days = course[5].join().replace(/,/g, "");
-  days = days.split("");
+function checkDays(course, userDays) {    
+  var days = course[5].join().split("");
+  var userDays5 = make5DayArray(userDays);
+  var courseDays5 = make5DayArray(days);
 
-  for (var i in daysArray) {
-    for (var j in days) {
-      if (daysArray[i] ==  days[j]) {//if 1 of the selected days is in the days of a course
+  //console.log(userDays5, courseDays5);
+
+  //if user only selected one day,
+  if (userDays.length == 1) {
+    for (var i in days) {
+      if (userDays == days[i]) {//if 1 of the selected days is in the days of a course
         return true;
       }
     }
+    //if user selected multiple days, algorithm assumes user means
+    //that an "AND" argument rather than "OR." i.e. if user selects
+    //M and Th, then all classes that meet MTh, or MWTh, or MTWThF
+    //will be returned, but no seminars that meet just once on Monday
+    //or Thursday will not be returned. 
+  } else if (userDays.length > 1) {//if user selected multiple days
+    var numDays = 0;
+    for (var i in userDays5) {
+      if (userDays5[i] == courseDays5[i] && courseDays5[i] != 0) {
+        numDays ++;
+      }
+    }
+    if (numDays == userDays.length){//if the number of day
+      console.log(userDays5, courseDays5);
+      return true;
+    }
   }
-
   return false;
 }
 
@@ -223,7 +179,8 @@ function checkAllConstraints(subject, distribution, days) {
   return results;
 }
 
-function findCoursesALLConstraints(subject, distribution, days) {
+function divifyCourses(subject, distribution, days) {
+
   //save all courses that fit the constraint into a variable
   var courses = checkAllConstraints(subject, distribution, days);
 
@@ -305,4 +262,31 @@ function toStringDistribs(course) {
     i += 1;
   }
   return string;
+}
+
+function make5DayArray(daysArray) {
+  var days = daysArray.join();
+  days = days.split("");
+
+  var fiveDays = [0,0,0,0,0];
+  for (var i in days) {
+    switch(days[i]){
+      case "M": 
+        fiveDays[0] = days[i];
+        break;
+      case "T":
+        fiveDays[1] = days[i];
+        break;
+      case "W": 
+        fiveDays[2] = days[i];
+        break;
+      case "R": 
+        fiveDays[3] = days[i];
+        break;
+      case "F": 
+        fiveDays[4] = days[i];
+        break;
+    }
+  }
+  return fiveDays;
 }
