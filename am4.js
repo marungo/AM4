@@ -62,7 +62,7 @@ $(document).ready(function () {
 });
 
 
-$.getJSON(url+"alt=json-in-script&callback=?", callbackFunction(response)});
+$.getJSON(url+"alt=json-in-script&callback=?", callbackFunction(response));
 
 function callbackFunction(response) {
   items = response.feed.entry;
